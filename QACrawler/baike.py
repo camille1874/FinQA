@@ -37,14 +37,14 @@ def query(entity,attr):
         return attr + "::找不到"
     else:
         info  = get_info(basicInfo_block)
-        if info.has_key(attr.decode('utf8')):
-            return info[attr.decode('utf8')]
+        if attr in info:
+            return info[attr]
         else:
             # 同义词判断
             attr_list = T.load_baikeattr_name(os.path.dirname(os.path.split(os.path.realpath(__file__))[0])+'/resources/Attribute_name.txt')
             attr = T.load_synonyms_word_inattr(attr,os.path.dirname(os.path.split(os.path.realpath(__file__))[0])+'/resources/SynonDic.txt',attr_list)
-            if info.has_key(attr.decode('utf8')):
-                return info[attr.decode('utf8')]
+            if attr in info:
+                return info[attr]
             else:
                 return attr + "::找不到"
 
