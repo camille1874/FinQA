@@ -1,107 +1,69 @@
 import jieba
 import jieba.posseg as pseg
 import time
+import QA1.search_knowledge as search_knowledge
 
-#from entity_extension import EntityExtension
-#from knowledge_base import knowledge_base
+from QA1.search_W2V import search_W2V
+from QA1.question_type import questionType
 
-import search_knowledge
-from search_W2V import search_W2V
-from question_type import questionType
-
-#web
 from flask import Flask,request,render_template,redirect
 
 class Client:
-    # 进行实体扩展并获取(实体，[实体知识列表])
-    def get_knowledge(self, question):
-        # 1.长实体情况，直接查询知识库
-        answer = search_knowledge.find(question)
-        if len(answer[1]) == 0:
-            # 2.不做实体扩展，查询知识库(别名表有错，所以先用原词查一遍)
-            entity = self.get_pos(question)[0]
-            answer = search_knowledge.find(entity)
-        return answer
+    def __init__(self):
+        time_start_total = time.time()
+        jieba.load_userdict('./QA1/data/dict/user_dict.txt')
+        # jieba.load_userdict('./QA1/data/dict/en_dict.txt')
+        # jieba.load_userdict('./QA1/data/dict/pre_dict.txt')
+        self.sear = search_W2V()
+        self.questype = questionType()
 
-    # 获取词性分析结果（实体，[关系列表]）
-    def get_pos(self, question):
+
+    # 获取实体及相应候选结果
+    def get_entity(self, question):
+        entity = ""
+        answers = [] 
+        if len(self.get_pos(question, "")) != 0:
+            entity = self.get_pos(question, "")[0]
+            entity, answers = search_knowledge.find(entity)
+        return entity, answers
+
+
+    # 获取词性分析结果（返回除实体之外的词）
+    def get_pos(self, question, entity):
         s = pseg.cut(question)
-        other = []
-        result=''
+        relations = []
         for item in s:
             token, pos = item.word, item.flag
-            if pos in ['nr', 'ns', 'nt', 'nz']:
-                if result == '':
-                    result = token
-            else:
-                other.append(token)
-        print("entity:"+result+'\n')
-        return (result, other)
+            if pos in ['n','nr', 'ns', 'nt', 'nz'] and token != entity:
+                relations.append(token)
+        return relations
 
-    def qa_web(self):
-        app = Flask(__name__)
-        # 绑定访问地址127.0.0.1:5000/user
-        @app.route("/qa", methods=['GET', 'POST'])
-        def login():
-            if request.method == 'POST':
-                question = request.form['question']
-                answer ,str_log = self.qa_find_ans(question)
-                message = str(question) + "      " + str(answer)
-                return render_template('login.html', message=message,log = str_log)
-            return render_template('login.html')
-        app.run(host='0.0.0.0', port=5001)
 
-    def qa_find_ans(self,question):
-        log_file = open('log_temp', 'w')
+    def qa_find_ans(self, question):
         str_log = ''
-        try:
-            if(question == -1):
-                return
-            time_start_getQuestType = time.time()
-            qtype = questype.get_type(question)
-            time_end_getQuestType = time.time()
-            print("运行 获取问题类型 用时：",time_end_getQuestType-time_start_getQuestType,"\n")
-            log_file.writelines("运行 获取问题类型 用时："+str(time_end_getQuestType-time_start_getQuestType)+"\n")
-            #print(c.get_knowledge(question))
-            # 实体知识列表
-            time_start_searchKnowledge = time.time()
-            Alist = c.get_knowledge(question)
-            time_end_searchKnowledge = time.time()
-            print("运行 数据库查询 用时：",time_end_searchKnowledge-time_start_searchKnowledge,"\n")
-            print(Alist)
-            log_file.writelines("运行 数据库查询 用时："+str(time_end_searchKnowledge-time_start_searchKnowledge)+"\n")
-            strss = ''
-            for item in Alist[1]:
-                strss += str(item[0]) + ' : ' + str(item[1]) + ' ; '
-            log_file.writelines(strss+'\n')
-            #list = c.get_knowledge(question)[1]
-            list = Alist[1]
-            # 关系列表
-            time_start_getVerb = time.time()
-            requlist = c.get_pos(question)[1]
-            requlist = questype.ques_type_list(requlist, qtype)
-            strss = ''
-            for item in requlist:
-                strss += str(item) + ' ; '
-            log_file.writelines("requlist start :: " + strss  + "requlist end \n")
-            time_end_getVerb = time.time()
-            print("运行 获取谓词模块 用时：",time_end_getVerb-time_start_getVerb,"\n")
-            log_file.writelines("运行 获取谓词模块 用时：" + str(time_end_getVerb-time_start_getVerb)+"\n")
-            str_return = sear.find_answer(list,requlist)
-            time_end_findAns = time.time()
-            print("运行 关系匹配模块 用时：",time_end_findAns-time_end_getVerb,"\n")
-            print(str_return)
-            log_file.writelines("运行 关系匹配模块 用时：" + str(time_end_findAns-time_end_getVerb) + "\n")
-        except Exception as e:
-            print("exception",e,'\n')
-            print('不知道~')
-            str_return = '不知道~'
-            log_file.writelines("exception" +  str(e) + '\n')
-        log_file.close()
-        log_file = open('log_temp')
-        for line in log_file:
-            str_log += str(line)
-        return str_return,str_log
+        str_return = '不知道~'
+        qtype = self.questype.get_type(question)
+        cand_relations = self.get_entity(question)
+        if cand_relations[0] == "":
+            str_log += "找不到问句中的实体\n"
+            return str_return, str_log
+        else:
+            str_log += "问句中的实体：" + cand_relations[0] + "\n"
+        if len(cand_relations[1]) == 0:
+            str_log += "知识库中找不到问句实体\n"
+            return str_return, str_log
+        tmp_relation_list = self.get_pos(question, cand_relations[0])
+        relation_list = self.questype.ques_type_list(tmp_relation_list, qtype)
+        len_rel = len(relation_list)
+        if len_rel == 0:
+            str_log += "找不到问句中的关系\n"
+            return str_return, str_log
+        str_return, tmp_log = self.sear.find_answer(cand_relations[1], relation_list)
+        str_log += tmp_log
+        return str_return, str_log
+
+
+
 if __name__ == '__main__':
     # 加载扩充实体
     # mid = EntityExtension()

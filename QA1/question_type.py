@@ -50,7 +50,7 @@ class questionType:
             # for word in list:
             #     if word in stop_list:
             #         list.remove(word)
-            stopword = [line.strip() for line in open('stopword.txt','r')]
+            stopword = [line.strip() for line in open('./QA1/stopword.txt','r')]
             for word in list:
                 if word in stopword:
                     list.remove(word)

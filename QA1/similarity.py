@@ -14,7 +14,7 @@ class Similarity:
         self.read_dict()        
 
     def read_dict(self):
-        file_object = codecs.open("./data/dict/cilin.txt", 'r', encoding='utf-8')
+        file_object = codecs.open("./QA1/data/dict/cilin.txt", 'r', encoding='utf-8')
         items = file_object.readlines()
         for item in items:
             if not (item is None or item == ""):
