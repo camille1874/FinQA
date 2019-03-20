@@ -45,7 +45,7 @@ class search_W2V:
         if max_value < 0.8:
             ans = "不知道~"
         log += "问句关系:" + q_rel + "\n"
-        log += "匹配到知识库关系：" + k_rel + "\n"
+        log += "匹配到知识库关系：" + k_rel + "(" + str(max_value) + ")\n"
         return ans, log
 
 

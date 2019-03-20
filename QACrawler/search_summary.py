@@ -57,6 +57,7 @@ def kwquery(query):
 
         #古诗词判断
         if 'mu' in results.attrs and i == 1 and results.find(class_="op_exactqa_detail_s_answer") != None:
+            r = results.find(class_="op_exactqa_detail_s_answer") 
             log += '百度诗词找到答案' + '#' * 50 + '\n'
             answer.append(r.get_text().strip())
             flag = 1

@@ -25,8 +25,8 @@ def qa_web():
             question = request.form['question']
             #answer, str_log = find_ans(question, ques_type)
             answer, str_log = find_ans(question)
-            if answer[0] == "是":
-                answer = question[0, question.find["是"]] + answer
+            if answer != "" and answer[0] == "是":
+                answer = question[:question.find["是"]] + answer
             elif "为什么" in question:
                 answer = "因为" + answer    
             message = "问：" + str(question) + "  答：" + str(answer)
@@ -40,23 +40,12 @@ def find_ans(question=''):
     global raw
     log = '答案来源：'
     cnt = 0
-    #try:
-            # 判断提问股票代码还是金融常识
-            #if ques_type == '1':
-            #    fd = FinancialData()
-            #    code = question
-            #    try:
-            #        name,table_name_list,table_date_list,url_list = fd.get_informations(fd.cwnb + code + '.html')
-            #    except Exception as e:
-            #        name,table_name_list,table_date_list,url_list = fd.get_informations(fd.cwnb1 + code + '.html')
-            #    return(fd.get_result(name,code,table_name_list,table_date_list,url_list), log)
-            #elif ques_type == '0':
     input_message = question
     if len(input_message) > 60:
         return (mybot.respond("句子长度过长"), log)
     elif input_message.strip() == '':
         return (mybot.respond("无"), log)
-    
+
     # 检索本地知识库得到答案，代码在QA1文件夹
     cnt += 1
     log += str(cnt) + ':检索本地知识库\n'
@@ -66,15 +55,12 @@ def find_ans(question=''):
     if ans != "不知道~":
         return (clean_str(ans), log)        
     log += '本地知识库找不到答案或答案不确定\n' 
-    
 
 
-    # 借助百度和Bing得到答案
     message = T.wordSegment(input_message)
-    words = T.postag(input_message)
-    
+
     response = mybot.respond(message)
-    #log += 'AIML模板返回内容:' + response + '\n'
+    # log += 'AIML模板返回内容:' + response + '\n'
     if response == "":
         ans = mybot.respond('不知道~')
         return (ans, log)
