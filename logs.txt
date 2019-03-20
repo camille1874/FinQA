@@ -1,0 +1,37 @@
+nohup: ignoring input
+>> Synonyms load wordseg dict [/root/anaconda3/envs/py36/lib/python3.6/site-packages/synonyms/data/vocab.txt] ... 
+Building prefix dict from /root/anaconda3/envs/py36/lib/python3.6/site-packages/synonyms/data/vocab.txt ...
+WARNING: Logging before flag parsing goes to stderr.
+I0320 13:07:30.566896 140615766996800 __init__.py:111] Building prefix dict from /root/anaconda3/envs/py36/lib/python3.6/site-packages/synonyms/data/vocab.txt ...
+Loading model from cache /tmp/jieba.u6d9f35d6b5297661c55393eb094f5bd9.cache
+I0320 13:07:30.568179 140615766996800 __init__.py:131] Loading model from cache /tmp/jieba.u6d9f35d6b5297661c55393eb094f5bd9.cache
+Loading model cost 2.306 seconds.
+I0320 13:07:32.873763 140615766996800 __init__.py:163] Loading model cost 2.306 seconds.
+Prefix dict has been built succesfully.
+I0320 13:07:32.874080 140615766996800 __init__.py:164] Prefix dict has been built succesfully.
+>> Synonyms on loading stopwords [/root/anaconda3/envs/py36/lib/python3.6/site-packages/synonyms/data/stopwords.txt] ...
+>> Synonyms on loading vectors [/root/anaconda3/envs/py36/lib/python3.6/site-packages/synonyms/data/words.vector] ...
+Loading /root/projects/FinQA/resources/std-startup.xml...done (0.00 seconds)
+Loading /root/projects/FinQA/resources/tools.aiml...done (0.02 seconds)
+Loading /root/projects/FinQA/resources/xiaohuangji.aiml...done (0.11 seconds)
+Loading /root/projects/FinQA/resources/ordinary_question.aiml...done (0.00 seconds)
+Loading /root/projects/FinQA/resources/common_conversation.aiml...done (0.00 seconds)
+ * Serving Flask app "client" (lazy loading)
+ * Environment: production
+   WARNING: Do not use the development server in a production environment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+W0320 13:08:49.942696 140614714496768 synonyms.py:157] not exist in w2v model: 专业特点
+W0320 13:08:49.944423 140614714496768 synonyms.py:157] not exist in w2v model: 主要奖项
+W0320 13:08:50.039555 140614714496768 synonyms.py:157] not exist in w2v model: 主要奖项
+W0320 13:08:50.326213 140614714496768 synonyms.py:157] not exist in w2v model: 名
+W0320 13:08:50.327006 140614714496768 synonyms.py:157] not exist in w2v model: 名
+W0320 13:08:50.421676 140614714496768 synonyms.py:157] not exist in w2v model: 主要奖项
+W0320 13:08:50.515943 140614714496768 synonyms.py:157] not exist in w2v model: 名
+W0320 13:08:50.611842 140614714496768 synonyms.py:157] not exist in w2v model: 外文名
+W0320 13:08:50.612668 140614714496768 synonyms.py:157] not exist in w2v model: 主要奖项
+W0320 13:08:50.613357 140614714496768 synonyms.py:157] not exist in w2v model: 名
+W0320 13:08:50.614041 140614714496768 synonyms.py:157] not exist in w2v model: 女
+W0320 13:08:51.430429 140614714496768 synonyms.py:157] not exist in w2v model: 主要奖项
+W0320 13:08:51.631762 140614714496768 synonyms.py:157] not exist in w2v model: 运动项目
+W0320 13:08:51.632866 140614714496768 synonyms.py:157] not exist in w2v model: 重要事件
