@@ -16,6 +16,7 @@ class Client:
         # jieba.load_userdict('./QA1/data/dict/pre_dict.txt')
         self.sear = search_W2V()
         self.questype = questionType()
+        self.db = search_knowledge.stat()
 
 
     # 获取实体及相应候选结果
@@ -24,7 +25,7 @@ class Client:
         answers = [] 
         if len(self.get_pos(question, "")) != 0:
             entity = self.get_pos(question, "")[0]
-            entity, answers = search_knowledge.find(entity)
+            entity, answers = search_knowledge.find(entity, self.db)
         return entity, answers
 
 
