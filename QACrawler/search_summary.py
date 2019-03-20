@@ -72,7 +72,7 @@ def kwquery(query):
                 flag = 1
                 break
 
-        if 'mu' in results.attrs and i == 1 and results.attrs['tpl'].__contains__('calendar_new'):
+        if 'tpl' in results.attrs and i == 1 and results.attrs['tpl'].__contains__('calendar_new'):
             r = results.attrs['fk'].replace("6018_","")
             if r != None:
                 log += '百度万年历新版找到答案' + '#' * 50 + '\n'
